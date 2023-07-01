@@ -20,6 +20,7 @@ const { recipes = JSON.stringify(allRecipes) } = Astro.props;
           name="input[]"
           placeholder="Enter your ingredients here"
           required></textarea>
+        <small>Every item is separated by new line (Press Enter)</small>
         <label for="range"
           >How picky are you?
           <input
@@ -31,7 +32,6 @@ const { recipes = JSON.stringify(allRecipes) } = Astro.props;
             name="range"
           />
         </label>
-        <small>Every item is separated by new line (Press Enter)</small>
         <input type="submit" value="Submit" />
       </form>
 
