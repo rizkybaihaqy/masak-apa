@@ -1,0 +1,16 @@
+{
+  "makanan": [
+    {
+      "nama": "Nasi Goreng",
+      "bahan": ["nasi", "bawang merah", "bawang putih", "telur", "kecap"]
+    },
+    {
+      "nama": "Mie Goreng",
+      "bahan": ["mie", "bawang merah", "bawang putih", "telur", "kecap"]
+    },
+    {
+      "nama": "Nasi Kucing",
+      "bahan": ["nasi", "kucing"]
+    }
+  ]
+}

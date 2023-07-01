@@ -1,0 +1,49 @@
+{
+  "makanan": [
+    {
+      "id": 1,
+      "nama": "Nasi Goreng",
+      "bahan": [1, 2, 3, 4, 5]
+    },
+    {
+      "id": 2,
+      "nama": "Mie Goreng",
+      "bahan": [6, 2, 3, 4, 5]
+    },
+    {
+      "id": 3,
+      "nama": "Nasi Kucing",
+      "bahan": [1, 7]
+    }
+  ],
+  "bahan": [
+    {
+      "id": 1,
+      "nama": "nasi"
+    },
+    {
+      "id": 2,
+      "nama": "bawang merah"
+    },
+    {
+      "id": 3,
+      "nama": "bawang putih"
+    },
+    {
+      "id": 4,
+      "nama": "telur"
+    },
+    {
+      "id": 5,
+      "nama": "kecap"
+    },
+    {
+      "id": 6,
+      "nama": "mie"
+    },
+    {
+      "id": 7,
+      "nama": "kucing"
+    }
+  ]
+}
