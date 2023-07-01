@@ -1,0 +1,50 @@
+---
+import { getData } from "../data";
+import Default from "../layouts/default.astro";
+
+export async function getStaticPaths() {
+  const recipes = await getData();
+  return recipes.map((recipe) => {
+    return {
+      params: {
+        slug: recipe.title
+          .toLowerCase()
+          .replace(/[^\w\s-]/g, "")
+          .replace(/\s+/g, "-"),
+      },
+      props: { recipe },
+    };
+  });
+}
+const { slug } = Astro.params;
+const { recipe } = Astro.props;
+---
+
+<Default>
+  <header class="container">
+    <hgroup>
+      <h1>{recipe.title}</h1>
+      <p>{recipe.description}</p>
+      <a href={recipe.URL}>{recipe.URL}</a>
+    </hgroup>
+    <section class="grid">
+      <mark>{recipe.total_time} Minutes</mark>
+      <mark>{recipe.serves} Servings</p>
+      <mark>{recipe.calories}</p>
+    </section>
+  </header>
+  <main class="container">
+    <section>
+      <h2>Ingredients</h2>
+      <ul>
+        {recipe.ingredients.map((ingredient) => <li>{ingredient}</li>)}
+      </ul>
+    </section>
+    <section>
+      <h2>Instructions</h2>
+      <ol>
+        {recipe.instructions.map((instruction) => <li>{instruction}</li>)}
+      </ol>
+    </section>
+  </main>
+</Default>

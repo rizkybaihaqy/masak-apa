@@ -1,0 +1,83 @@
+---
+import Default from "../layouts/default.astro";
+import { getData } from "../data.js";
+
+const allRecipes = await getData();
+const { recipes = JSON.stringify(allRecipes) } = Astro.props;
+---
+
+<Default>
+  <header class="container">
+    <hgroup>
+      <h1>Masak Apa?</h1>
+      <p>Enter the ingredients that you have and start cooking</p>
+    </hgroup>
+  </header>
+  <main class="container">
+    <astro-recommendation data-recipes={recipes}>
+      <form>
+        <textarea
+          name="input[]"
+          placeholder="Enter your ingredients here"
+          required></textarea>
+        <label for="range"
+          >How picky are you?
+          <input
+            type="range"
+            min="10"
+            max={allRecipes.length}
+            value="10"
+            id="range"
+            name="range"
+          />
+        </label>
+        <small>Every item is separated by new line (Press Enter)</small>
+        <input type="submit" value="Submit" />
+      </form>
+
+      <ol></ol>
+    </astro-recommendation>
+  </main>
+
+  <script>
+    import { judge } from "../judge.js";
+
+    class AstroRecommendation extends HTMLElement {
+      constructor() {
+        super();
+
+        const recipes = JSON.parse(this.dataset.recipes);
+        const container = this.querySelector("ol");
+
+        this.querySelector("form").addEventListener("submit", function (event) {
+          // Prevent form submission
+          event.preventDefault();
+
+          // Get the textarea value
+          const value = this.querySelector('textarea[name="input[]"]').value;
+          const range = this.querySelector('input[name="range"]').value;
+          var input = value.split("\n").filter((value) => value.trim() !== "");
+
+          const results = judge(recipes)(input)
+            .sort((a, b) => b.score - a.score)
+            .slice(0, range);
+
+          console.log(results);
+
+          // Render the results
+          container.innerHTML = results
+            .map(
+              (recipe) =>
+                `<li><a href=${recipe.title
+                  .toLowerCase()
+                  .replace(/[^\w\s-]/g, "")
+                  .replace(/\s+/g, "-")}>${recipe.title}</a></li>`
+            )
+            .join("");
+        });
+      }
+    }
+
+    customElements.define("astro-recommendation", AstroRecommendation);
+  </script>
+</Default>
