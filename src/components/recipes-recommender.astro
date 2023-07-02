@@ -57,23 +57,27 @@ const recipes = await getData()
         ).value;
 
         const results = judge(recipes)(input)
+          .filter((recipe) => recipe.score > 0)
           .sort((a, b) => b.score - a.score)
           .slice(0, range);
 
         console.log(results);
 
         container.innerHTML =
-          "<h2 id='our-recommendation'>Our Recommendation</h2></ol>" +
-          results
-            .map(
-              (recipe) =>
-                `<li><a href=${recipe.title
-                  .toLowerCase()
-                  .replace(/[^\w\s-]/g, "")
-                  .replace(/\s+/g, "-")}>${recipe.title}</a></li>`
-            )
-            .join("") +
-          "<ol>";
+          "<h2 id='our-recommendation'>Our Recommendation</h2>" +
+          (results.length === 0
+            ? "<p>Sorry, we can't find any recipe for you.</p>"
+            : "<ol>" +
+              results
+                .map(
+                  (recipe) =>
+                    `<li><a href=${recipe.title
+                      .toLowerCase()
+                      .replace(/[^\w\s-]/g, "")
+                      .replace(/\s+/g, "-")}>${recipe.title}</a></li>`
+                )
+                .join("") +
+              "</ol>");
 
         window.location.hash = "#our-recommendation";
       });
