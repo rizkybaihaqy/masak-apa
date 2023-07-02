@@ -20,31 +20,33 @@ const { slug } = Astro.params;
 const { recipe } = Astro.props;
 ---
 
-<Default>
+<Default title={`${recipe.title} | Masak Apa?`}>
   <header class="container">
     <hgroup>
       <h1>{recipe.title}</h1>
       <p>{recipe.description}</p>
       <a href={recipe.URL}>{recipe.URL}</a>
     </hgroup>
-    <section class="grid">
+    <div class="grid" style="text-align: center;">
       <mark>{recipe.total_time} Minutes</mark>
-      <mark>{recipe.serves} Servings</p>
-      <mark>{recipe.calories}</p>
-    </section>
+      <mark>{recipe.serves}</mark>
+      <mark>{recipe.calories}</mark>
+    </div>
   </header>
   <main class="container">
-    <section>
-      <h2>Ingredients</h2>
-      <ul>
-        {recipe.ingredients.map((ingredient) => <li>{ingredient}</li>)}
-      </ul>
-    </section>
-    <section>
-      <h2>Instructions</h2>
-      <ol>
-        {recipe.instructions.map((instruction) => <li>{instruction}</li>)}
-      </ol>
+    <section class="grid">
+      <article>
+        <h2>Ingredients</h2>
+        <ul>
+          {recipe.ingredients.map((ingredient) => <li>{ingredient}</li>)}
+        </ul>
+      </article>
+      <article>
+        <h2>Instructions</h2>
+        <ol>
+          {recipe.instructions.map((instruction) => <li>{instruction}</li>)}
+        </ol>
+      </article>
     </section>
   </main>
 </Default>
