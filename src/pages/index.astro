@@ -1,15 +1,6 @@
 ---
 import Default from "../layouts/default.astro";
-import { getData } from "../data.js";
-
-const miniRecipes = await getData().then((recipes) =>
-  recipes.map((recipe) => ({
-    title: recipe.title,
-    ingredients: recipe.ingredients,
-  }))
-);
-
-const { recipes = JSON.stringify(miniRecipes) } = Astro.props;
+import RecipesRecommender from "../components/recipes-recommender.astro";
 ---
 
 <Default>
@@ -20,70 +11,12 @@ const { recipes = JSON.stringify(miniRecipes) } = Astro.props;
     </hgroup>
   </header>
   <main class="container">
-    <astro-recommendation data-recipes={recipes}>
-      <form>
-        <textarea
-          name="input[]"
-          placeholder="Enter your ingredients here"
-          required></textarea>
-        <small>Every item is separated by new line (Press Enter)</small>
-        <label for="range"
-          >How picky are you?
-          <input
-            type="range"
-            min="10"
-            max={miniRecipes.length}
-            value="10"
-            id="range"
-            name="range"
-          />
-        </label>
-        <input type="submit" value="Submit" />
-      </form>
-
-      <ol></ol>
-    </astro-recommendation>
+    <noscript>
+      <p>
+        This website requires JavaScript to run. Please enable JavaScript in
+        your browser settings.
+      </p>
+    </noscript>
+    <RecipesRecommender />
   </main>
-
-  <script>
-    import { judge } from "../judge.js";
-
-    class AstroRecommendation extends HTMLElement {
-      constructor() {
-        super();
-
-        const recipes = JSON.parse(this.dataset.recipes);
-        const container = this.querySelector("ol");
-
-        this.querySelector("form").addEventListener("submit", function (event) {
-          // Prevent form submission
-          event.preventDefault();
-
-          // Get the textarea value
-          const value = this.querySelector('textarea[name="input[]"]').value;
-          const range = this.querySelector('input[name="range"]').value;
-          var input = value.split("\n").filter((value) => value.trim() !== "");
-
-          const results = judge(recipes)(input)
-            .sort((a, b) => b.score - a.score)
-            .slice(0, range);
-
-          console.log(results);
-
-          // Render the results
-          container.innerHTML = results
-            .map(
-              (recipe) =>
-                `<li><a href=${recipe.title
-                  .toLowerCase()
-                  .replace(/[^\w\s-]/g, "")
-                  .replace(/\s+/g, "-")}>${recipe.title}</a></li>`
-            )
-            .join("");
-        });
-      }
-    }
-
-    customElements.define("astro-recommendation", AstroRecommendation);
-  </script>
 </Default>

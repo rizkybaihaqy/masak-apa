@@ -1,0 +1,84 @@
+---
+import { getData } from "../data.js";
+
+const recipes = await getData()
+  .then((recipes) =>
+    recipes.map((recipe) => ({
+      title: recipe.title,
+      ingredients: recipe.ingredients,
+    }))
+  )
+  .then((recipes) => JSON.stringify(recipes));
+---
+
+<recipes-recommender data-recipes={recipes}>
+  <form>
+    <textarea name="input[]" placeholder="Enter your ingredients here" required
+    ></textarea>
+    <small>Every item is separated by new line (Press Enter)</small>
+    <label for="range"
+      >How picky are you?
+      <input
+        type="range"
+        min="10"
+        max={recipes.length}
+        value="10"
+        id="range"
+        name="range"
+      />
+    </label>
+    <input type="submit" value="Submit" />
+  </form>
+
+  <section></section>
+</recipes-recommender>
+
+<script>
+  import { judge } from "../judge.js";
+
+  class RecipesRecommender extends HTMLElement {
+    constructor() {
+      super();
+
+      const recipes = JSON.parse(this.dataset.recipes);
+      const container = this.querySelector("section");
+
+      this.querySelector("form").addEventListener("submit", function (event) {
+        event.preventDefault();
+
+        const input = (
+          this.querySelector('textarea[name="input[]"]') as HTMLInputElement
+        ).value
+          .split("\n")
+          .filter((value) => value.trim() !== "");
+
+        const range = (
+          this.querySelector('input[name="range"]') as HTMLInputElement
+        ).value;
+
+        const results = judge(recipes)(input)
+          .sort((a, b) => b.score - a.score)
+          .slice(0, range);
+
+        console.log(results);
+
+        container.innerHTML =
+          "<h2 id='our-recommendation'>Our Recommendation</h2></ol>" +
+          results
+            .map(
+              (recipe) =>
+                `<li><a href=${recipe.title
+                  .toLowerCase()
+                  .replace(/[^\w\s-]/g, "")
+                  .replace(/\s+/g, "-")}>${recipe.title}</a></li>`
+            )
+            .join("") +
+          "<ol>";
+
+        window.location.hash = "#our-recommendation";
+      });
+    }
+  }
+
+  customElements.define("recipes-recommender", RecipesRecommender);
+</script>
