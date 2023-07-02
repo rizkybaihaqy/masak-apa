@@ -2,8 +2,14 @@
 import Default from "../layouts/default.astro";
 import { getData } from "../data.js";
 
-const allRecipes = await getData();
-const { recipes = JSON.stringify(allRecipes) } = Astro.props;
+const miniRecipes = await getData().then((recipes) =>
+  recipes.map((recipe) => ({
+    title: recipe.title,
+    ingredients: recipe.ingredients,
+  }))
+);
+
+const { recipes = JSON.stringify(miniRecipes) } = Astro.props;
 ---
 
 <Default>
@@ -26,7 +32,7 @@ const { recipes = JSON.stringify(allRecipes) } = Astro.props;
           <input
             type="range"
             min="10"
-            max={allRecipes.length}
+            max={miniRecipes.length}
             value="10"
             id="range"
             name="range"
